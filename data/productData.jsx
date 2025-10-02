@@ -8,7 +8,7 @@ const Products = [
     description:
       'The ultimate iPhone with advanced camera system, A17 Pro chip, and titanium design. Features ProMotion display and all-day battery life.',
     category: 'iPhone',
-    image: '../public/img/iPhone17ProMax.png',
+    image: '/img/iPhone17ProMax.png',
     rating: {
       rate: 4.9,
       count: 2847,
@@ -21,7 +21,7 @@ const Products = [
     description:
       'Supercharged by the M3 chip. Up to 18 hours of battery life. Liquid Retina display. Incredibly portable and powerful.',
     category: 'Mac',
-    image: '../../public/img/MacBookAir.png',
+    image: '/img/MacBookAir.png',
     rating: {
       rate: 4.8,
       count: 1523,
@@ -34,7 +34,7 @@ const Products = [
     description:
       'The ultimate iPad experience with M4 chip, Liquid Retina XDR display, and support for Apple Pencil Pro.',
     category: 'iPad',
-    image: '../../public/img/iPadPro.png',
+    image: '/img/iPadPro.png',
     rating: {
       rate: 4.7,
       count: 1890,
@@ -47,7 +47,7 @@ const Products = [
     description:
       'Advanced health and fitness features. Always-On Retina display. Water resistant. Carbon neutral.',
     category: 'Watch',
-    image: '../../public/img/AppleWatchUltra3.png',
+    image: '/img/AppleWatchUltra3.png',
     rating: {
       rate: 4.6,
       count: 3421,
@@ -60,7 +60,7 @@ const Products = [
     description:
       'Active Noise Cancellation. Adaptive Audio. Personalized Spatial Audio. Up to 6 hours of listening time.',
     category: 'AirPods',
-    image: '../../public/img/Vision.png',
+    image: '/img/VisionPro.png',
     rating: {
       rate: 4.8,
       count: 5632,
@@ -73,7 +73,7 @@ const Products = [
     description:
       'Powered by M3 chip. 4.5K Retina display. Studio-quality mics. Six-speaker sound system. Available in seven colors.',
     category: 'Mac',
-    image: '../../public/img/iMac.png',
+    image: '/img/iMac.png',
     rating: {
       rate: 4.7,
       count: 987,
@@ -86,7 +86,7 @@ const Products = [
     description:
       'Revolutionary spatial computer. Blend digital content with physical space. Ultra-high-resolution displays.',
     category: 'AirPods',
-    image: '../../public/img/AirPodsPro3.png',
+    image: '/img/AirPodsPro3.png',
     rating: {
       rate: 4.5,
       count: 432,
@@ -99,7 +99,7 @@ const Products = [
     description:
       'Supercharged by M2 Max or M2 Ultra. Compact design with massive performance. Connect up to 8 displays.',
     category: 'Mac',
-    image: '../../public/img/MacStudio.png',
+    image: '/img/MacStudio.png',
     rating: {
       rate: 4.9,
       count: 645,
@@ -112,7 +112,7 @@ const Products = [
     description:
       'Serious performance in a thin and light design. M1 chip. 10.9-inch Liquid Retina display.',
     category: 'iPad',
-    image: '../../public/img/iPadAir.png',
+    image: '/img/iPadAir.png',
     rating: {
       rate: 4.6,
       count: 2134,
@@ -125,7 +125,7 @@ const Products = [
     description:
       'A total powerhouse. Featuring Dynamic Island, advanced dual-camera system, and A16 Bionic chip.',
     category: 'iPhone',
-    image: '../../public/img/iPhone17.png',
+    image: '/img/iPhone17.png',
     rating: {
       rate: 4.7,
       count: 4521,
@@ -138,7 +138,7 @@ const Products = [
     description:
       'The Apple experience you love on the big screen. 4K Dolby Vision. Immersive sound with Dolby Atmos.',
     category: 'TV & Home',
-    image: '../../public/img/AppleTV4K.png',
+    image: '/img/AppleTV4K.png',
     rating: {
       rate: 4.6,
       count: 1876,
@@ -151,7 +151,7 @@ const Products = [
     description:
       'Profound sound. Intelligent assistant. Smart home control. Room-filling audio with spatial awareness.',
     category: 'TV & Home',
-    image: '../../public/img/HomePod2.png',
+    image: '/img/HomePod2.png',
     rating: {
       rate: 4.5,
       count: 923,
@@ -164,7 +164,7 @@ const Products = [
     description:
       'Mind-blowing performance with M3 Pro or M3 Max. Liquid Retina XDR display. Up to 18 hours of battery.',
     category: 'Mac',
-    image: '../../public/img/MacbookPro.png',
+    image: '/img/MacbookPro.png',
     rating: {
       rate: 4.9,
       count: 1765,
@@ -177,7 +177,7 @@ const Products = [
     description:
       'Computational audio. Active Noise Cancellation. Spatial Audio. Breathtaking sound quality.',
     category: 'AirPods',
-    image: '../../public/img/AirPodMax.png',
+    image: '/img/AirPodsMax.png',
     rating: {
       rate: 4.7,
       count: 1234,
@@ -190,7 +190,7 @@ const Products = [
     description:
       'Massive performance in a compact design. M2 or M2 Pro chip. Connect everything you need.',
     category: 'Mac',
-    image: '../../public/img/MacMini.png',
+    image: '/img/MacMini.png',
     rating: {
       rate: 4.7,
       count: 876,
@@ -203,7 +203,7 @@ const Products = [
     description:
       'Pixel-perfect precision. Industry-leading low latency. Hover. Tilt and pressure sensitivity.',
     category: 'Accessories',
-    image: '../../public/img/ApplePecilPro.png',
+    image: '/img/ApplePencilPro.png',
     rating: {
       rate: 4.8,
       count: 2341,
