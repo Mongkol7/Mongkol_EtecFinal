@@ -8,8 +8,7 @@ import Navbar from './Ui/Navbar';
 import Footer from './Ui/Footer';
 import ProductCarousel from './Ui/ProductCarousel';
 import HorizontalCarousel from './Ui/HorizontalCarousel';
-import products from '../data/productData';
-
+import Products from '../data/productData';
 function ProductContainer() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,15 +23,15 @@ function ProductContainer() {
   const helpRef = useRef(null);
 
   // Get featured products (first 5)
-  const featuredProducts = products.slice(0, 5);
+  const featuredProducts = Products.slice(0, 5);
 
   // Get new arrivals (products with iPhone, iPad, Mac categories)
-  const newArrivals = products.filter((p) =>
+  const newArrivals = Products.filter((p) =>
     ['iPhone', 'iPad', 'Mac'].includes(p.category)
   );
 
   // Get accessories
-  const accessories = products.filter((p) =>
+  const accessories = Products.filter((p) =>
     ['AirPods', 'Accessories', 'Watch'].includes(p.category)
   );
 
@@ -88,7 +87,7 @@ function ProductContainer() {
 
   useEffect(() => {
     setTimeout(() => {
-      setData(products);
+      setData(Products);
       setLoading(false);
       console.log('Products loaded successfully✅');
     }, 500);
