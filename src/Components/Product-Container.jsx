@@ -1,4 +1,5 @@
 //product container
+import Products from '../data/productData.jsx';
 import React, { useEffect, useState, useRef } from 'react';
 import '../App.css';
 import { Link } from 'react-router-dom';
@@ -8,7 +9,7 @@ import Navbar from './Ui/Navbar';
 import Footer from './Ui/Footer';
 import ProductCarousel from './Ui/ProductCarousel';
 import HorizontalCarousel from './Ui/HorizontalCarousel';
-import Products from '../data/productData.jsx';
+
 function ProductContainer() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
