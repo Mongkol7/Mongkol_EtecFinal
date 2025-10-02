@@ -1,49 +1,109 @@
-import React from 'react';
+//product container
+import React, { useEffect, useState, useRef } from 'react';
 import '../App.css';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Skeleton from './skeleton';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { ChevronRight } from 'lucide-react';
+import Navbar from './Ui/Navbar';
+import Footer from './Ui/Footer';
+import ProductCarousel from './Ui/ProductCarousel';
+import HorizontalCarousel from './Ui/HorizontalCarousel';
+import products from '../data/productData';
 
 function ProductContainer() {
-  const [data, setData] = React.useState([]); // for storing data from API in state variable data and setData is function to update data
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [visibleCards, setVisibleCards] = useState({});
+  const [visibleSections, setVisibleSections] = useState({});
 
-  const [loading, setLoading] = useState(true); // for loading state
+  const productRefs = useRef([]);
+  const heroRef = useRef(null);
+  const featuredRef = useRef(null);
+  const newArrivalsRef = useRef(null);
+  const accessoriesRef = useRef(null);
+  const helpRef = useRef(null);
 
+  // Get featured products (first 5)
+  const featuredProducts = products.slice(0, 5);
+
+  // Get new arrivals (products with iPhone, iPad, Mac categories)
+  const newArrivals = products.filter((p) =>
+    ['iPhone', 'iPad', 'Mac'].includes(p.category)
+  );
+
+  // Get accessories
+  const accessories = products.filter((p) =>
+    ['AirPods', 'Accessories', 'Watch'].includes(p.category)
+  );
+
+  // Intersection Observer for sections
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('https://fakestoreapi.com/products');
-        setData(response.data);
-        response.status === 200
-          ? console.log('Data fetched successfully✅')
-          : console.log('Something went wrong during fetching data❌');
-      } catch (err) {
-        console.log('Something went wrong during fetching data: ' + err);
-      } finally {
-        setLoading(false); // set loading to false after data is fetched or error occurs
-      }
-    };
-    fetchData();
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const sectionName = entry.target.dataset.section;
+            setVisibleSections((prev) => ({ ...prev, [sectionName]: true }));
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    );
+
+    const sections = [
+      { ref: heroRef, name: 'hero' },
+      { ref: featuredRef, name: 'featured' },
+      { ref: newArrivalsRef, name: 'newArrivals' },
+      { ref: accessoriesRef, name: 'accessories' },
+      { ref: helpRef, name: 'help' },
+    ];
+
+    sections.forEach(({ ref }) => {
+      if (ref.current) sectionObserver.observe(ref.current);
+    });
+
+    return () => sectionObserver.disconnect();
   }, []);
 
-  // Function to add item to localStorage cart
+  // Intersection Observer for product cards
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = productRefs.current.indexOf(entry.target);
+            setVisibleCards((prev) => ({ ...prev, [index]: true }));
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    );
+
+    productRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, [data]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setData(products);
+      setLoading(false);
+      console.log('Products loaded successfully✅');
+    }, 500);
+  }, []);
+
   const addToCart = (item) => {
     try {
-      // Get existing cart from localStorage or initialize empty array
       const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
-
-      // Check if item already exists in cart
       const existingItemIndex = existingCart.findIndex(
         (cartItem) => cartItem.id === item.id
       );
 
       if (existingItemIndex !== -1) {
-        // If item exists, increase quantity
         existingCart[existingItemIndex].quantity += 1;
       } else {
-        // If item doesn't exist, add new item with quantity 1
         const cartItem = {
           id: item.id,
           title: item.title,
@@ -56,10 +116,7 @@ function ProductContainer() {
         existingCart.push(cartItem);
       }
 
-      // Save updated cart to localStorage
       localStorage.setItem('cart', JSON.stringify(existingCart));
-
-      console.log('Cart updated:', existingCart);
       return true;
     } catch (error) {
       console.error('Error saving to cart:', error);
@@ -67,169 +124,249 @@ function ProductContainer() {
     }
   };
 
-  // Function to get cart count for display
-  const getCartCount = () => {
-    try {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      return cart.reduce((total, item) => total + item.quantity, 0);
-    } catch (error) {
-      console.error('Error reading cart:', error);
-      return 0;
-    }
-  };
-
-  // Simplified SweetAlert function for Buy Now button - Direct add to cart
   const handleBuyNow = (item) => {
-    // Add item to cart directly
     const success = addToCart(item);
-
     if (success) {
-      // Success alert only
       Swal.fire({
-        title: 'Added to Cart!',
-        text: `"${item.title}" has been added to your cart.`,
+        title: 'Added to Bag',
+        html: `<div class="text-center">
+          <p class="text-gray-300 mb-2">"${item.title}"</p>
+          <p class="text-sm text-gray-400">Free delivery and returns</p>
+        </div>`,
         icon: 'success',
-        confirmButtonColor: '#10b981',
-        confirmButtonText: 'Continue Shopping',
-        timer: 2500,
+        confirmButtonColor: '#a855f7',
+        confirmButtonText: 'View Bag',
+        showCancelButton: true,
+        cancelButtonText: 'Continue Shopping',
+        cancelButtonColor: '#6b7280',
+        timer: 3000,
         timerProgressBar: true,
-        showConfirmButton: false,
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: '#1f2937',
+        color: '#fff',
+        backdrop: 'rgba(0,0,0,0.8)',
         customClass: {
-          popup: 'rounded-xl',
-          title: 'text-xl font-bold text-gray-800',
-          content: 'text-gray-600',
+          popup: 'rounded-2xl shadow-2xl',
+          title: 'text-2xl font-semibold text-white',
+          confirmButton: 'rounded-full px-6 py-2 font-medium',
+          cancelButton: 'rounded-full px-6 py-2 font-medium',
         },
-      });
-    } else {
-      // Error alert
-      Swal.fire({
-        title: 'Error!',
-        text: 'Failed to add item to cart. Please try again.',
-        icon: 'error',
-        confirmButtonColor: '#ef4444',
-        confirmButtonText: 'OK',
-        timer: 2500,
-        timerProgressBar: true,
-        background: 'rgba(255, 255, 255, 0.95)',
-        customClass: {
-          popup: 'rounded-xl',
-          title: 'text-xl font-bold text-gray-800',
-          content: 'text-gray-600',
-          confirmButton: 'font-bold px-6 py-3 rounded-lg',
-        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = '/ProductCard';
+        }
       });
     }
   };
 
   return (
-    <div className="container mx-auto select-none">
-      <div className="nav flex justify-between items-center  rounded-[20px] my-5">
-        <Link
-          to="/"
-          className="text-green-600 font-bold text-5xl text-center my-5 shadow-lg p-5 rounded-lg hover:scale-105 transition-all duration-300"
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-black text-white">
+        {/* Hero Section */}
+        <section
+          ref={heroRef}
+          data-section="hero"
+          className={`pt-32 pb-16 px-6 bg-gradient-to-b from-purple-900/20 to-black relative transition-all duration-1000 ${
+            visibleSections.hero
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-12'
+          }`}
         >
-          MK-SHOP
-        </Link>
-        <div className="flex gap-4 mr-5">
-          <Link
-            to="/ProductCard"
-            className="text-green-600 font-bold text-lg hover:underline relative"
-          >
-            Cart
-            <i className="fa fa-shopping-cart ml-1 text-green-600"></i>
-            {getCartCount() > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {getCartCount()}
-              </span>
-            )}
-          </Link>
-          <Link
-            to="/"
-            className="text-green-600 font-bold text-lg hover:underline"
-          >
-            Profile
-          </Link>
-        </div>
-      </div>
-      {
-        <div className="product-container flex flex-wrap justify-center items-center gap-[20px] mx-auto">
-          {loading ? (
-            <>
-              <>
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-              </>
-              :
-            </>
-          ) : (
-            data.map((item) => (
-              <div
-                key={item.id}
-                className="product-card w-[300px] h-[360px] flex flex-col bg-white items-center p-4 rounded-[20px] shadow-lg overflow-hidden"
-              >
-                {/* Image Container */}
-                <div className="w-full h-[160px] flex justify-center items-center mb-3 bg-gray-50 rounded-lg">
-                  <Link to={`/product/${item.id}`}>
-                    <img
-                      className="h-[140px] w-auto object-contain hover:scale-105 transition-all duration-300 cursor-pointer"
-                      src={item.image}
-                      alt={item.title}
-                    />
-                  </Link>
-                </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-blue-900/20"></div>
+          <div className="max-w-screen-xl mx-auto text-center relative z-10">
+            <h1 className="text-5xl md:text-7xl font-thin bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent mb-4 tracking-tight">
+              Store
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-400 mb-8 font-light">
+              The best way to buy the products you love.
+            </p>
+          </div>
+        </section>
 
-                {/* Content Container */}
-                <div className="flex flex-col text-center w-full h-full">
-                  <Link to={`/product/${item.id}`}>
-                    <h1 className="title text-lg font-bold hover:text-green-600 transition-colors duration-300 cursor-pointer mb-2 leading-tight h-[50px] overflow-hidden">
-                      {item.title.slice(0, 40)}
-                    </h1>
-                  </Link>
-                  <p className="des text-gray-600 text-sm leading-relaxed mb-3 h-[60px] overflow-hidden">
-                    {item.description.slice(0, 70)}...
-                  </p>
+        {/* Featured Products Carousel */}
+        <section
+          ref={featuredRef}
+          data-section="featured"
+          className={`py-16 px-6 bg-black transition-all duration-1000 ${
+            visibleSections.featured
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-12'
+          }`}
+        >
+          <div className="max-w-screen-xl mx-auto">
+            <ProductCarousel
+              products={featuredProducts}
+              title="Featured Products"
+              autoPlayDelay={2500}
+              isVisible={visibleSections.featured}
+            />
+          </div>
+        </section>
 
-                  {/* Price and Button - Fixed to bottom */}
-                  <div className="flex flex-row justify-between items-center w-full bg-transparent mt-[-20px]">
-                    <h1 className="price text-xl font-bold text-green-600">
-                      $ {item.price}
-                    </h1>
-                    {/* Buy Button with SweetAlert and localStorage */}
-                    <button
-                      onClick={() => handleBuyNow(item)}
-                      className="button flex flex-row gap-0"
-                    >
-                      <span className="text">Buy Now</span>
-                      <span className="svg">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="50"
-                          height="20"
-                          viewBox="0 0 38 15"
-                          fill="none"
-                        >
-                          <path
-                            fill="white"
-                            d="M10 7.519l-.939-.344h0l.939.344zm14.386-1.205l-.981-.192.981.192zm1.276 5.509l.537.843.148-.094.107-.139-.792-.611zm4.819-4.304l-.385-.923h0l.385.923zm7.227.707a1 1 0 0 0 0-1.414L31.343.448a1 1 0 0 0-1.414 0 1 1 0 0 0 0 1.414l5.657 5.657-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364zM1 7.519l.554.833.029-.019.094-.061.361-.23 1.277-.77c1.054-.609 2.397-1.32 3.629-1.787.617-.234 1.17-.392 1.623-.455.477-.066.707-.008.788.034.025.013.031.021.039.034a.56.56 0 0 1 .058.235c.029.327-.047.906-.39 1.842l1.878.689c.383-1.044.571-1.949.505-2.705-.072-.815-.45-1.493-1.16-1.865-.627-.329-1.358-.332-1.993-.244-.659.092-1.367.305-2.056.566-1.381.523-2.833 1.297-3.921 1.925l-1.341.808-.385.245-.104.068-.028.018c-.011.007-.011.007.543.84zm8.061-.344c-.198.54-.328 1.038-.36 1.484-.032.441.024.94.325 1.364.319.45.786.64 1.21.697.403.054.824-.001 1.21-.09.775-.179 1.694-.566 2.633-1.014l3.023-1.554c2.115-1.122 4.107-2.168 5.476-2.524.329-.086.573-.117.742-.115s.195.038.161.014c-.15-.105.085-.139-.076.685l1.963.384c.192-.98.152-2.083-.74-2.707-.405-.283-.868-.37-1.28-.376s-.849.069-1.274.179c-1.65.43-3.888 1.621-5.909 2.693l-2.948 1.517c-.92.439-1.673.743-2.221.87-.276.064-.429.065-.492.057-.043-.006.066.003.155.127.07.099.024.131.038-.063.014-.187.078-.49.243-.94l-1.878-.689zm14.343-1.053c-.361 1.844-.474 3.185-.413 4.161.059.95.294 1.72.811 2.215.567.544 1.242.546 1.664.459a2.34 2.34 0 0 0 .502-.167l.15-.076.049-.028.018-.011c.013-.008.013-.008-.524-.852l-.536-.844.019-.012c-.038.018-.064.027-.084.032-.037.008.053-.013.125.056.021.02-.151-.135-.198-.895-.046-.734.034-1.887.38-3.652l-1.963-.384zm2.257 5.701l.791.611.024-.031.08-.101.311-.377 1.093-1.213c.922-.954 2.005-1.894 2.904-2.27l-.771-1.846c-1.31.547-2.637 1.758-3.572 2.725l-1.184 1.314-.341.414-.093.117-.025.032c-.01.013-.01.013.781.624zm5.204-3.381c.989-.413 1.791-.42 2.697-.307.871.108 2.083.385 3.437.385v-2c-1.197 0-2.041-.226-3.19-.369-1.114-.139-2.297-.146-3.715.447l.771 1.846z"
-                          ></path>
-                        </svg>
-                      </span>
-                    </button>
-                  </div>
-                </div>
+        {/* New Arrivals Horizontal Carousel */}
+        <section
+          ref={newArrivalsRef}
+          data-section="newArrivals"
+          className={`py-16 bg-gradient-to-b from-black to-gray-900/50 transition-all duration-1000 ${
+            visibleSections.newArrivals
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-12'
+          }`}
+        >
+          <HorizontalCarousel
+            products={newArrivals}
+            title="New Arrivals"
+            isVisible={visibleSections.newArrivals}
+          />
+        </section>
+
+        {/* Accessories Horizontal Carousel */}
+        <section
+          ref={accessoriesRef}
+          data-section="accessories"
+          className={`py-16 bg-gray-900/50 transition-all duration-1000 ${
+            visibleSections.accessories
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-12'
+          }`}
+        >
+          <HorizontalCarousel
+            products={accessories}
+            title="Accessories"
+            isVisible={visibleSections.accessories}
+          />
+        </section>
+
+        {/* All Products Grid */}
+        <section className="py-16 px-6 bg-black">
+          <div className="max-w-screen-xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-thin text-white mb-12 text-center">
+              All Products
+            </h2>
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-gray-900/50 rounded-3xl h-[500px] animate-pulse backdrop-blur-xl border border-white/10"
+                  ></div>
+                ))}
               </div>
-            ))
-          )}
-        </div>
-      }
-    </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {data.map((item, index) => (
+                  <div
+                    key={item.id}
+                    ref={(el) => (productRefs.current[index] = el)}
+                    className={`group transition-all duration-700 ${
+                      visibleCards[index]
+                        ? 'opacity-100 translate-y-0'
+                        : 'opacity-0 translate-y-12'
+                    }`}
+                    style={{ transitionDelay: `${(index % 4) * 100}ms` }}
+                  >
+                    <div className="bg-gray-900/50 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-purple-500/50 transition-all duration-300 h-full flex flex-col hover:transform hover:scale-105">
+                      <div className="mb-4">
+                        <span className="text-xs font-semibold text-purple-400 uppercase tracking-wider">
+                          {item.category}
+                        </span>
+                      </div>
+
+                      <Link
+                        to={`/product/${item.id}`}
+                        className="flex-shrink-0 mb-6"
+                      >
+                        <div className="relative h-64 flex items-center justify-center bg-white/5 rounded-2xl p-4">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="max-h-full w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+                          />
+                        </div>
+                      </Link>
+
+                      <div className="flex-grow flex flex-col">
+                        <Link to={`/product/${item.id}`}>
+                          <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2 group-hover:text-purple-300 transition-colors duration-300">
+                            {item.title}
+                          </h3>
+                        </Link>
+
+                        <p className="text-sm text-gray-400 mb-4 line-clamp-2 leading-relaxed">
+                          {item.description}
+                        </p>
+
+                        <div className="flex items-center mb-4">
+                          <div className="flex text-yellow-400">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i}>★</span>
+                            ))}
+                          </div>
+                          <span className="ml-2 text-sm text-gray-400">
+                            {item.rating?.rate || '4.5'} (
+                            {item.rating?.count || '100'})
+                          </span>
+                        </div>
+
+                        <div className="mt-auto">
+                          <p className="text-2xl font-semibold text-white mb-4">
+                            ${item.price}
+                          </p>
+
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleBuyNow(item)}
+                              className="flex-1 bg-white text-black py-3 px-6 rounded-full font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl"
+                            >
+                              Buy Now
+                            </button>
+                            <Link
+                              to={`/product/${item.id}`}
+                              className="flex items-center justify-center px-4 border-2 border-white/30 text-white rounded-full hover:border-white transition-all duration-300"
+                            >
+                              <ChevronRight size={20} />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Help Section */}
+        <section
+          ref={helpRef}
+          data-section="help"
+          className={`py-24 px-6 bg-gradient-to-r from-purple-900/20 to-blue-900/20 transition-all duration-1000 ${
+            visibleSections.help
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-12'
+          }`}
+        >
+          <div className="max-w-screen-xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-thin text-white mb-6">
+              Need shopping help?
+            </h2>
+            <p className="text-xl text-gray-300 mb-12">
+              Ask a Specialist or contact our support team.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <button className="bg-white text-black px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl">
+                Contact Support
+              </button>
+              <button className="border-2 border-white/30 text-white px-8 py-4 rounded-full text-lg font-medium hover:border-white transition-all duration-300 transform hover:scale-105">
+                Find a Store
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </>
   );
 }
 

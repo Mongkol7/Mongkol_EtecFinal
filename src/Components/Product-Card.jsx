@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from 'lucide-react';
+import Navbar from './Ui/Navbar';
+import Footer from './Ui/Footer';
+import products from '../data/productData';
 
 const ProductCard = () => {
   const [cartItems, setCartItems] = useState([]);
 
-  // Load cart data from localStorage on component mount ONLY
+  // Load cart data from localStorage and enrich with full product data
   useEffect(() => {
     const loadCart = () => {
       try {
         const savedCart = localStorage.getItem('cart');
         if (savedCart) {
           const parsed = JSON.parse(savedCart);
-          setCartItems(Array.isArray(parsed) ? parsed : []);
+          // Enrich cart items with full product data from productData.js
+          const enrichedCart = parsed.map((cartItem) => {
+            const fullProduct = products.find((p) => p.id === cartItem.id);
+            return fullProduct
+              ? { ...fullProduct, quantity: cartItem.quantity }
+              : cartItem;
+          });
+          setCartItems(Array.isArray(enrichedCart) ? enrichedCart : []);
         }
       } catch (error) {
         console.error('Error loading cart:', error);
@@ -21,14 +32,14 @@ const ProductCard = () => {
     };
 
     loadCart();
-  }, []); // Empty dependency array - only run once
+  }, []);
 
   // Calculate totals
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const shipping = subtotal > 50 ? 0 : 9.99;
+  const shipping = subtotal > 100 ? 0 : 19.99;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
@@ -44,24 +55,25 @@ const ProductCard = () => {
     localStorage.setItem('cart', JSON.stringify(updatedItems));
   };
 
-  // Remove item with SweetAlert confirmation
+  // Remove item with dark-themed SweetAlert
   const removeItem = (id) => {
     const item = cartItems.find((item) => item.id === id);
 
     Swal.fire({
       title: 'Remove Item?',
-      text: `Are you sure you want to remove "${item.title}" from your cart?`,
+      text: `Remove "${item.title}" from your bag?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
       cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Yes, Remove',
+      confirmButtonText: 'Remove',
       cancelButtonText: 'Cancel',
-      background: 'rgba(255, 255, 255, 0.95)',
+      background: '#1f2937',
+      color: '#fff',
+      backdrop: 'rgba(0,0,0,0.8)',
       customClass: {
-        popup: 'rounded-xl',
-        title: 'text-xl font-bold text-gray-800',
-        content: 'text-gray-600',
+        popup: 'rounded-2xl',
+        title: 'text-xl font-semibold',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -69,91 +81,70 @@ const ProductCard = () => {
         setCartItems(updatedItems);
         localStorage.setItem('cart', JSON.stringify(updatedItems));
 
-        // Success message
         Swal.fire({
-          title: 'Removed!',
-          text: `"${item.title}" has been removed from your cart.`,
+          title: 'Removed',
+          text: 'Item removed from your bag',
           icon: 'success',
-          confirmButtonColor: '#10b981',
+          confirmButtonColor: '#a855f7',
           timer: 2000,
           timerProgressBar: true,
           showConfirmButton: false,
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: '#1f2937',
+          color: '#fff',
+          backdrop: 'rgba(0,0,0,0.8)',
           customClass: {
-            popup: 'rounded-xl',
-            title: 'text-xl font-bold text-gray-800',
-            content: 'text-gray-600',
+            popup: 'rounded-2xl',
           },
         });
       }
     });
   };
 
-  // Handle quantity decrease with confirmation when reaching 0
+  // Handle quantity decrease
   const handleDecreaseQuantity = (id, currentQuantity) => {
     if (currentQuantity === 1) {
-      // If quantity is 1, ask for confirmation to remove
       removeItem(id);
     } else {
-      // Just decrease quantity normally
       updateQuantity(id, currentQuantity - 1);
     }
   };
 
-  // Clear entire cart with SweetAlert confirmation
+  // Clear entire cart
   const clearCart = () => {
-    if (cartItems.length === 0) {
-      Swal.fire({
-        title: 'Cart is Empty',
-        text: 'Your cart is already empty.',
-        icon: 'info',
-        confirmButtonColor: '#6b7280',
-        timer: 2000,
-        timerProgressBar: true,
-        background: 'rgba(255, 255, 255, 0.95)',
-        customClass: {
-          popup: 'rounded-xl',
-          title: 'text-xl font-bold text-gray-800',
-          content: 'text-gray-600',
-        },
-      });
-      return;
-    }
+    if (cartItems.length === 0) return;
 
     Swal.fire({
-      title: 'Clear Cart?',
-      text: `Are you sure you want to remove all ${cartItems.length} items from your cart? This action cannot be undone.`,
+      title: 'Clear Bag?',
+      text: `Remove all ${cartItems.length} items?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
       cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Yes, Clear Cart',
+      confirmButtonText: 'Clear All',
       cancelButtonText: 'Cancel',
-      background: 'rgba(255, 255, 255, 0.95)',
+      background: '#1f2937',
+      color: '#fff',
+      backdrop: 'rgba(0,0,0,0.8)',
       customClass: {
-        popup: 'rounded-xl',
-        title: 'text-xl font-bold text-gray-800',
-        content: 'text-gray-600',
+        popup: 'rounded-2xl',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         setCartItems([]);
         localStorage.removeItem('cart');
 
-        // Success message
         Swal.fire({
-          title: 'Cart Cleared!',
-          text: 'All items have been removed from your cart.',
+          title: 'Bag Cleared',
           icon: 'success',
-          confirmButtonColor: '#10b981',
+          confirmButtonColor: '#a855f7',
           timer: 2000,
           timerProgressBar: true,
           showConfirmButton: false,
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: '#1f2937',
+          color: '#fff',
+          backdrop: 'rgba(0,0,0,0.8)',
           customClass: {
-            popup: 'rounded-xl',
-            title: 'text-xl font-bold text-gray-800',
-            content: 'text-gray-600',
+            popup: 'rounded-2xl',
           },
         });
       }
@@ -161,112 +152,222 @@ const ProductCard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 flex justify-between items-center">
-          {/* Back Button */}
-          <div className="styled-wrapper">
-            <Link to="/" className="nav-btn">
-              <div className="nav-btn-box">
-                <span className="nav-btn-elem">
-                  <svg
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="arrow-icon"
-                  >
-                    <path
-                      fill="black"
-                      d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-                    ></path>
-                  </svg>
-                </span>
-                <span className="nav-btn-elem">
-                  <svg
-                    fill="black"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="arrow-icon"
-                  >
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
-                  </svg>
-                </span>
-              </div>
-            </Link>
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-black text-white pt-20">
+        {/* Header Section */}
+        <section className="py-16 px-6 bg-gradient-to-b from-purple-900/20 to-black relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-blue-900/20"></div>
+          <div className="max-w-screen-xl mx-auto relative z-10">
+            <div className="flex items-center justify-between mb-8">
+              <Link
+                to="/ProductContainer"
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <ArrowLeft size={20} />
+                <span>Continue Shopping</span>
+              </Link>
+              {cartItems.length > 0 && (
+                <button
+                  onClick={clearCart}
+                  className="text-red-400 hover:text-red-300 transition-colors duration-300"
+                >
+                  Clear Bag
+                </button>
+              )}
+            </div>
+            <h1 className="text-5xl md:text-7xl font-thin bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent mb-4">
+              Your Bag
+            </h1>
+            <p className="text-xl text-gray-400">
+              {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
+            </p>
           </div>
-
-          <h1 className="text-3xl font-bold text-green-600">Shopping Cart</h1>
-
-          {cartItems.length > 0 && (
-            <button
-              onClick={clearCart}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition-all duration-300"
-            >
-              Clear Cart
-            </button>
-          )}
-        </div>
+        </section>
 
         {cartItems.length === 0 ? (
           // Empty Cart
-          <div className="bg-white rounded-3xl shadow-xl p-16 text-center">
-            <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
-              <svg
-                className="w-16 h-16 text-gray-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+          <section className="py-24 px-6">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="w-32 h-32 bg-gray-900/50 backdrop-blur-xl rounded-full flex items-center justify-center mx-auto mb-8 border border-white/10">
+                <ShoppingBag size={64} className="text-gray-500" />
+              </div>
+              <h2 className="text-4xl font-thin text-white mb-4">
+                Your bag is empty
+              </h2>
+              <p className="text-xl text-gray-400 mb-8">
+                Start adding products you love
+              </p>
+              <Link
+                to="/ProductContainer"
+                className="inline-block bg-white text-black px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl"
               >
-                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"></path>
-              </svg>
+                Start Shopping
+              </Link>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Your cart is empty
-            </h2>
-            <p className="text-gray-600 text-lg mb-8">
-              Add some products from the main page to see them here!
-            </p>
-            <Link
-              to="/"
-              className="bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-green-700 transition-all duration-300 hover:scale-105 inline-block"
-            >
-              Start Shopping
-            </Link>
-          </div>
+          </section>
         ) : (
           // Cart with Items
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Cart Items ({cartItems.length})
-              </h2>
+          <section className="py-16 px-6">
+            <div className="max-w-screen-xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Cart Items */}
+                <div className="lg:col-span-2 space-y-6">
+                  {cartItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="bg-gray-900/50 backdrop-blur-xl rounded-3xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+                    >
+                      <div className="flex flex-col md:flex-row gap-6">
+                        {/* Product Image */}
+                        <Link
+                          to={`/product/${item.id}`}
+                          className="w-full md:w-48 h-48 bg-white/5 rounded-2xl flex items-center justify-center p-4 hover:bg-white/10 transition-all duration-300"
+                        >
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="max-w-full max-h-full object-contain hover:scale-105 transition-transform duration-500"
+                          />
+                        </Link>
 
-              {cartItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300"
-                >
-                  <div className="flex flex-col md:flex-row gap-6">
-                    {/* Product Image */}
-                    <div className="w-full md:w-32 h-32 bg-gray-50 rounded-xl flex items-center justify-center p-4">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="max-w-full max-h-full object-contain"
-                      />
+                        {/* Product Info */}
+                        <div className="flex-1 flex flex-col justify-between">
+                          <div>
+                            <div className="flex justify-between items-start mb-3">
+                              <div>
+                                <span className="text-xs font-semibold text-purple-400 uppercase tracking-wider">
+                                  {item.category}
+                                </span>
+                                <Link to={`/product/${item.id}`}>
+                                  <h3 className="text-xl font-semibold text-white mt-2 hover:text-purple-300 transition-colors duration-300">
+                                    {item.title}
+                                  </h3>
+                                </Link>
+                              </div>
+                              <button
+                                onClick={() => removeItem(item.id)}
+                                className="p-2 hover:bg-red-500/20 rounded-full transition-all duration-300 group"
+                              >
+                                <Trash2
+                                  size={20}
+                                  className="text-gray-400 group-hover:text-red-400"
+                                />
+                              </button>
+                            </div>
+
+                            <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                              {item.description}
+                            </p>
+
+                            <p className="text-2xl font-semibold text-white mb-4">
+                              ${item.price}
+                            </p>
+                          </div>
+
+                          {/* Quantity Controls */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <button
+                                onClick={() =>
+                                  handleDecreaseQuantity(item.id, item.quantity)
+                                }
+                                className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 flex items-center justify-center border border-white/20"
+                              >
+                                <Minus size={16} className="text-white" />
+                              </button>
+                              <span className="text-lg font-medium text-white min-w-[40px] text-center">
+                                {item.quantity}
+                              </span>
+                              <button
+                                onClick={() =>
+                                  updateQuantity(item.id, item.quantity + 1)
+                                }
+                                className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 flex items-center justify-center border border-white/20"
+                              >
+                                <Plus size={16} className="text-white" />
+                              </button>
+                            </div>
+
+                            <div className="text-xl font-bold text-white">
+                              ${(item.price * item.quantity).toFixed(2)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Order Summary */}
+                <div className="lg:col-span-1">
+                  <div className="bg-gray-900/50 backdrop-blur-xl rounded-3xl p-8 border border-white/10 sticky top-24">
+                    <h2 className="text-2xl font-semibold text-white mb-6">
+                      Summary
+                    </h2>
+
+                    <div className="space-y-4 mb-6">
+                      <div className="flex justify-between text-lg">
+                        <span className="text-gray-400">Subtotal</span>
+                        <span className="font-semibold text-white">
+                          ${subtotal.toFixed(2)}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between text-lg">
+                        <span className="text-gray-400">Shipping</span>
+                        <span className="font-semibold text-white">
+                          {shipping === 0 ? (
+                            <span className="text-purple-400">Free</span>
+                          ) : (
+                            `$${shipping.toFixed(2)}`
+                          )}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between text-lg">
+                        <span className="text-gray-400">Tax</span>
+                        <span className="font-semibold text-white">
+                          ${tax.toFixed(2)}
+                        </span>
+                      </div>
+
+                      <div className="border-t border-white/10 pt-4">
+                        <div className="flex justify-between text-xl font-bold">
+                          <span className="text-white">Total</span>
+                          <span className="text-white">
+                            ${total.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Product Info */}
-                    <div className="flex-1 flex flex-col justify-between">
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="text-lg font-bold text-gray-900 leading-tight">
-                            {item.title}
-                          </h3>
-                          <button
-                            onClick={() => removeItem(item.id)}
-                            className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-full transition-all duration-300"
-                          >
+                    {subtotal < 100 && subtotal > 0 && (
+                      <div className="bg-purple-500/20 border border-purple-500/30 rounded-2xl p-4 mb-6">
+                        <p className="text-purple-200 text-sm">
+                          Add ${(100 - subtotal).toFixed(2)} more for free
+                          shipping
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="space-y-3">
+                      <Link
+                        to="/checkout"
+                        className="block w-full bg-white text-black py-4 px-6 rounded-full font-medium text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl text-center"
+                      >
+                        Checkout
+                      </Link>
+                      <button className="w-full border-2 border-white/30 text-white py-3 px-6 rounded-full font-medium hover:border-white transition-all duration-300">
+                        Apple Pay
+                      </button>
+                    </div>
+
+                    {/* Trust Badges */}
+                    <div className="mt-8 pt-6 border-t border-white/10">
+                      <div className="grid grid-cols-2 gap-4 text-sm text-gray-400">
+                        <div className="flex flex-col items-center text-center">
+                          <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center mb-2">
                             <svg
                               className="w-5 h-5"
                               fill="currentColor"
@@ -274,168 +375,40 @@ const ProductCard = () => {
                             >
                               <path
                                 fillRule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                                 clipRule="evenodd"
-                              ></path>
+                              />
                             </svg>
-                          </button>
-                        </div>
-
-                        {item.category && (
-                          <div className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold capitalize mb-4">
-                            {item.category}
                           </div>
-                        )}
-
-                        <div className="text-2xl font-bold text-green-600 mb-4">
-                          ${item.price}
+                          <span>Secure Checkout</span>
+                        </div>
+                        <div className="flex flex-col items-center text-center">
+                          <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center mb-2">
+                            <svg
+                              className="w-5 h-5"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                          <span>Free Returns</span>
                         </div>
                       </div>
-
-                      {/* Quantity Controls */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="text-gray-600 font-medium">
-                            Quantity:
-                          </span>
-                          <button
-                            onClick={() =>
-                              handleDecreaseQuantity(item.id, item.quantity)
-                            }
-                            className="w-10 h-10 bg-gray-200 hover:bg-red-600 hover:text-white text-gray-800 font-bold rounded-full transition-all duration-300 hover:scale-110 flex items-center justify-center"
-                          >
-                            -
-                          </button>
-                          <span className="bg-gray-100 px-4 py-2 rounded-xl text-lg font-bold text-gray-900 min-w-[60px] text-center border-2 border-gray-200">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
-                            }
-                            className="w-10 h-10 bg-gray-200 hover:bg-green-600 hover:text-white text-gray-800 font-bold rounded-full transition-all duration-300 hover:scale-110 flex items-center justify-center"
-                          >
-                            +
-                          </button>
-                        </div>
-
-                        <div className="text-xl font-bold text-gray-900">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Order Summary */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Order Summary
-                </h2>
-
-                <div className="space-y-4 mb-6">
-                  <div className="flex justify-between text-lg">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-semibold">
-                      ${subtotal.toFixed(2)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-lg">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="font-semibold">
-                      {shipping === 0 ? (
-                        <span className="text-green-600">Free</span>
-                      ) : (
-                        `$${shipping.toFixed(2)}`
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-lg">
-                    <span className="text-gray-600">Tax</span>
-                    <span className="font-semibold">${tax.toFixed(2)}</span>
-                  </div>
-
-                  <div className="border-t pt-4">
-                    <div className="flex justify-between text-xl font-bold">
-                      <span>Total</span>
-                      <span className="text-green-600">
-                        ${total.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {subtotal < 50 && subtotal > 0 && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
-                    <p className="text-yellow-800 text-sm">
-                      Add ${(50 - subtotal).toFixed(2)} more for free shipping!
-                    </p>
-                  </div>
-                )}
-
-                <div className="space-y-3">
-                  <button className="w-full bg-green-600 hover:bg-green-700 text-white py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                    Proceed to Checkout
-                  </button>
-                  <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 px-6 rounded-2xl font-semibold transition-all duration-300">
-                    Save for Later
-                  </button>
-                </div>
-
-                {/* Trust Badges */}
-                <div className="mt-8 pt-6 border-t">
-                  <div className="flex justify-center gap-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      Secure
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
-                      </svg>
-                      Free Shipping
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      Easy Returns
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
         )}
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

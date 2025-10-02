@@ -1,3 +1,129 @@
+/* 17 */
+.text-glow {
+  --glow-color: rgb(222, 188, 255);
+  --glow-spread-color: rgba(191, 123, 255, 0.981);
+  --enhanced-glow-color: rgb(231, 206, 255);
+  --btn-color: rgb(203, 147, 255);
+  padding: 1em 3em;
+  color: var(--glow-color);
+  font-weight: bold;
+  background-color: var(--btn-color);
+  outline: none;
+  text-shadow: 
+    0 0 .5em var(--glow-color),
+    0 0 1em var(--glow-color),
+    0 0 1.5em var(--glow-spread-color);
+  position: relative;
+  transition: all 0.3s;
+}
+
+.text-glow:hover {
+  color: var(--btn-color);
+  background-color: var(--glow-color);
+  cursor: pointer;
+  text-shadow: 
+    0 0 .5em var(--btn-color),
+    0 0 1em var(--btn-color),
+    0 0 2em var(--btn-color),
+    0 0 3em var(--enhanced-glow-color);
+  transform: scale(1.02);
+}
+
+/* Seach: */
+.group {
+ position: relative;
+}
+
+.input {
+ font-size: 16px;
+ padding: 10px 10px 10px 5px;
+ display: block;
+ width: 200px;
+ border: none;
+ border-bottom: 1px solid #515151;
+ background: transparent;
+}
+
+.input:focus {
+ outline: none;
+}
+
+label {
+ color: #999;
+ font-size: 18px;
+ font-weight: normal;
+ position: absolute;
+ pointer-events: none;
+ left: 5px;
+ top: 10px;
+ transition: 0.2s ease all;
+ -moz-transition: 0.2s ease all;
+ -webkit-transition: 0.2s ease all;
+}
+
+.input:focus ~ label, .input:valid ~ label {
+ top: -20px;
+ font-size: 14px;
+ color: #5264AE;
+}
+
+.bar {
+ position: relative;
+ display: block;
+ width: 200px;
+}
+
+.bar:before, .bar:after {
+ content: '';
+ height: 2px;
+ width: 0;
+ bottom: 1px;
+ position: absolute;
+ background: #5264AE;
+ transition: 0.2s ease all;
+ -moz-transition: 0.2s ease all;
+ -webkit-transition: 0.2s ease all;
+}
+
+.bar:before {
+ left: 50%;
+}
+
+.bar:after {
+ right: 50%;
+}
+
+.input:focus ~ .bar:before, .input:focus ~ .bar:after {
+ width: 50%;
+}
+
+.highlight {
+ position: absolute;
+ height: 60%;
+ width: 100px;
+ top: 25%;
+ left: 0;
+ pointer-events: none;
+ opacity: 0.5;
+}
+
+.input:focus ~ .highlight {
+ animation: inputHighlighter 0.3s ease;
+}
+
+@keyframes inputHighlighter {
+ from {
+  background: #5264AE;
+ }
+
+ to {
+  width: 0;
+  background: transparent;
+ }
+}
+
+
+
 /* App.css */
         .styled-wrapper .nav-btn {
             display: block;
