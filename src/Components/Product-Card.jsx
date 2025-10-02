@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from 'lucide-react';
 import Navbar from './Ui/Navbar';
 import Footer from './Ui/Footer';
-import products from '../data/productData';
+import products from '../../data/productData';
 
 const ProductCard = () => {
   const [cartItems, setCartItems] = useState([]);

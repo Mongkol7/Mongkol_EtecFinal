@@ -5,7 +5,7 @@ import { Plus, Minus, ShoppingBag, Star, ChevronRight } from 'lucide-react';
 import Navbar from './Ui/Navbar';
 import Footer from './Ui/Footer';
 import HorizontalCarousel from './Ui/HorizontalCarousel';
-import products from '../data/productData';
+import products from '../../data/productData';
 function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);

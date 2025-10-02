@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import Navbar from './Ui/Navbar';
 import Footer from './Ui/Footer';
-import products from '../data/productData';
+import products from '../../data/productData';
 
 const Checkout = () => {
   const navigate = useNavigate();

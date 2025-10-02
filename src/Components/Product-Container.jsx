@@ -1,5 +1,5 @@
 //product container
-import Products from '../data/productData.jsx';
+import Products from '../../data/productData.jsx';
 import React, { useEffect, useState, useRef } from 'react';
 import '../App.css';
 import { Link } from 'react-router-dom';
