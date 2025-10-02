@@ -8,7 +8,7 @@ const Products = [
     description:
       'The ultimate iPhone with advanced camera system, A17 Pro chip, and titanium design. Features ProMotion display and all-day battery life.',
     category: 'iPhone',
-    image: '../../public/img/iPhone17ProMax.png',
+    image: '../public/img/iPhone17ProMax.png',
     rating: {
       rate: 4.9,
       count: 2847,
