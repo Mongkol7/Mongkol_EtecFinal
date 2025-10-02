@@ -8,7 +8,7 @@ import Navbar from './Ui/Navbar';
 import Footer from './Ui/Footer';
 import ProductCarousel from './Ui/ProductCarousel';
 import HorizontalCarousel from './Ui/HorizontalCarousel';
-import Products from '../data/productData';
+import Products from '../data/productData.jsx';
 function ProductContainer() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);

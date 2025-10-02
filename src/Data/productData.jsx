@@ -1,4 +1,6 @@
-export const Products = [
+// This file should only contain the data array and not be used to export React components.
+
+const Products = [
   {
     id: 1,
     title: 'iPhone 17 Pro Max',
