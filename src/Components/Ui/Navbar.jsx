@@ -511,7 +511,7 @@ const Navbar = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out rounded-lg transform scale-x-0 group-hover:scale-x-100"></div>
                   <div className="relative z-10 transition-all duration-300 ease-out group-hover:brightness-110">
                     <img
-                      src="../../../public/img/AppleLogo.png"
+                      src="/img/AppleLogo.png"
                       className="w-5 h-5"
                     ></img>
                   </div>

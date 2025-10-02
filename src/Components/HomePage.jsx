@@ -214,7 +214,7 @@ useEffect(() => {
             Pro Max
           </h1>
           <img
-            src="../../public/img/Iphone17ProMax-NoBC.png"
+            src="/img/Iphone17ProMax-NoBC.png"
             alt="Background"
             className="absolute bottom-0 left-0 right-0 w-auto h-[70vh] object-contain object-bottom md:w-full md:h-[90vh] md:object-contain md:object-bottom lg:inset-0 lg:w-full lg:h-full lg:object-contain opacity-100 lg:z-0 md:z-1 pointer-events-none select-none"
             style={{
@@ -343,14 +343,14 @@ useEffect(() => {
                   preload="auto"
                 >
                   <source
-                    src="../../public/video/ShotOnIphone.mp4"
+                    src="/video/ShotOnIphone.mp4"
                     type="video/mp4"
                   />
                 </video>
 
                 {/* iPhone Frame Image Overlay */}
                 <img
-                  src="../../public/img/iPhone-Frame.png"
+                  src="/img/iPhone-Frame.png"
                   alt="iPhone Frame"
                   className="absolute inset-0 w-full h-full object-cover pointer-events-none z-10"
                 />
