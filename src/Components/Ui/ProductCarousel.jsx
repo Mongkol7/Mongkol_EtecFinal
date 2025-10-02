@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const ProductCarousel = ({ products, title, autoPlayDelay = 5000 }) => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const carouselRef = useRef(null);
@@ -111,7 +113,7 @@ const ProductCarousel = ({ products, title, autoPlayDelay = 5000 }) => {
         },
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = '/ProductCard';
+          navigate('/ProductCard');
         }
       });
     }
