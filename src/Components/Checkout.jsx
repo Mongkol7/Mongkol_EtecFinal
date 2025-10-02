@@ -290,8 +290,8 @@ const Checkout = () => {
                     </h2>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Email *
+                        <label className="block text-sm font-medium text-gray-300 mb-2 ml-[200px]">
+                         
                         </label>
                         <input
                           type="email"
@@ -303,10 +303,10 @@ const Checkout = () => {
                           required
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">
-                            First Name *
+                         
                           </label>
                           <input
                             type="text"
@@ -320,7 +320,7 @@ const Checkout = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Last Name *
+                       
                           </label>
                           <input
                             type="text"
@@ -335,7 +335,7 @@ const Checkout = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Phone *
+                    
                         </label>
                         <input
                           type="tel"
@@ -361,7 +361,7 @@ const Checkout = () => {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Address *
+                         
                         </label>
                         <input
                           type="text"
@@ -375,7 +375,7 @@ const Checkout = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Apartment, suite, etc. (optional)
+                          
                         </label>
                         <input
                           type="text"
@@ -386,10 +386,10 @@ const Checkout = () => {
                           placeholder="Apt 4B"
                         />
                       </div>
-                      <div className="grid grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">
-                            City *
+                            
                           </label>
                           <input
                             type="text"
@@ -403,7 +403,7 @@ const Checkout = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">
-                            State *
+                           
                           </label>
                           <input
                             type="text"
@@ -417,7 +417,7 @@ const Checkout = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">
-                            ZIP Code *
+                           
                           </label>
                           <input
                             type="text"
@@ -444,7 +444,7 @@ const Checkout = () => {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Card Number *
+                         
                         </label>
                         <div className="relative">
                           <input
@@ -465,7 +465,7 @@ const Checkout = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Cardholder Name *
+                         
                         </label>
                         <input
                           type="text"
@@ -477,10 +477,10 @@ const Checkout = () => {
                           required
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Expiry Date *
+                           
                           </label>
                           <input
                             type="text"
@@ -495,7 +495,7 @@ const Checkout = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">
-                            CVV *
+                            
                           </label>
                           <input
                             type="text"
@@ -509,16 +509,20 @@ const Checkout = () => {
                           />
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 pt-4">
+                      <div className="flex items-start gap-3 pt-4">
                         <input
                           type="checkbox"
+                          id="saveInfo"
                           name="saveInfo"
                           checked={formData.saveInfo}
                           onChange={handleInputChange}
-                          className="w-5 h-5 bg-white/5 border border-white/10 rounded text-purple-500 focus:ring-2 focus:ring-purple-500"
+                          className="w-5 h-5 mt-0.5 bg-white/5 border border-white/10 rounded text-purple-500 focus:ring-2 focus:ring-purple-500 flex-shrink-0"
                         />
-                        <label className="text-sm text-gray-300">
-                          Save payment information for future purchases
+                        <label
+                          htmlFor="saveInfo"
+                          className="text-sm text-gray-300"
+                        >
+                   
                         </label>
                       </div>
                     </div>
@@ -556,14 +560,14 @@ const Checkout = () => {
                   <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
                     {cartItems.map((item) => (
                       <div key={item.id} className="flex gap-4">
-                        <div className="w-20 h-20 bg-white/5 rounded-xl flex items-center justify-center p-2">
+                        <div className="w-20 h-20 bg-white/5 rounded-xl flex items-center justify-center p-2 flex-shrink-0">
                           <img
                             src={item.image}
                             alt={item.title}
                             className="max-w-full max-h-full object-contain"
                           />
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <h3 className="text-sm font-medium text-white line-clamp-1">
                             {item.title}
                           </h3>
@@ -616,15 +620,24 @@ const Checkout = () => {
                   <div className="mt-8 pt-6 border-t border-white/10">
                     <div className="space-y-3 text-sm text-gray-400">
                       <div className="flex items-center gap-3">
-                        <CheckCircle size={20} className="text-purple-400" />
+                        <CheckCircle
+                          size={20}
+                          className="text-purple-400 flex-shrink-0"
+                        />
                         <span>30-day money-back guarantee</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <CheckCircle size={20} className="text-purple-400" />
+                        <CheckCircle
+                          size={20}
+                          className="text-purple-400 flex-shrink-0"
+                        />
                         <span>Free returns within 14 days</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <CheckCircle size={20} className="text-purple-400" />
+                        <CheckCircle
+                          size={20}
+                          className="text-purple-400 flex-shrink-0"
+                        />
                         <span>Secure SSL encrypted checkout</span>
                       </div>
                     </div>

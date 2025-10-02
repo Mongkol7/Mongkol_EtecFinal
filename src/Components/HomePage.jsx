@@ -197,12 +197,18 @@ useEffect(() => {
 
           <div className="max-w-4xl mx-auto text-center lg:mt-[160px] md:mt-[140px] mt-[100px] lg:mb-[-100px] md:mb-[0px] mb-[0px] z-10 relative px-6">
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="bg-white text-black px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl">
+              <Link
+                to={`/product/1`}
+                className="bg-white text-black px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl"
+              >
                 Pre-order Now
-              </button>
-              <button className="border-2 border-white/30 text-white px-8 py-4 rounded-full text-lg font-medium hover:border-white transition-all duration-300 transform hover:scale-105">
+              </Link>
+              <Link
+                to={`/product/1`}
+                className="border-2 border-white/30 text-white px-8 py-4 rounded-full text-lg font-medium hover:border-white transition-all duration-300 transform hover:scale-105"
+              >
                 Learn More
-              </button>
+              </Link>
             </div>
 
             <p className="text-gray-400 text-sm mt-8">
@@ -237,11 +243,13 @@ useEffect(() => {
 
           <div className="relative w-80 h-80 md:w-96 md:h-96 mx-auto mb-12">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-3xl opacity-20 blur-3xl"></div>
-            <img
-              src={productImages[currentImageIndex]}
-              alt="Product"
-              className="relative w-full h-full object-cover rounded-3xl transition-all duration-1000 transform hover:scale-105"
-            />
+            <Link to={`/product/1`} className="relative w-full h-full">
+              <img
+                src={productImages[currentImageIndex]}
+                alt="Product"
+                className="relative w-full h-full object-cover rounded-3xl transition-all duration-1000 transform hover:scale-105"
+              />
+            </Link>
           </div>
 
           <div className="flex gap-3 justify-center mb-8">
@@ -256,10 +264,13 @@ useEffect(() => {
             ))}
           </div>
 
-          <button className="bg-white text-black px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl">
+          <Link
+            to={`/ProductContainer`}
+            className="bg-white text-black px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl"
+          >
             Discover More
-          </button>
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          </Link>
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 animate-bounce">
             <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
               <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
             </div>
@@ -342,10 +353,7 @@ useEffect(() => {
                   playsInline
                   preload="auto"
                 >
-                  <source
-                    src="/video/ShotOnIphone.mp4"
-                    type="video/mp4"
-                  />
+                  <source src="/video/ShotOnIphone.mp4" type="video/mp4" />
                 </video>
 
                 {/* iPhone Frame Image Overlay */}
@@ -468,12 +476,18 @@ useEffect(() => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="bg-white text-black px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl">
+              <Link
+                to={`/product/1`}
+                className="bg-white text-black px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl"
+              >
                 Pre-order Now
-              </button>
-              <button className="border-2 border-white/30 text-white px-8 py-4 rounded-full text-lg font-medium hover:border-white transition-all duration-300 transform hover:scale-105">
+              </Link>
+              <Link
+                to={`/product/1`}
+                className="border-2 border-white/30 text-white px-8 py-4 rounded-full text-lg font-medium hover:border-white transition-all duration-300 transform hover:scale-105"
+              >
                 Learn More
-              </button>
+              </Link>
             </div>
 
             <p className="text-gray-400 text-sm mt-8">

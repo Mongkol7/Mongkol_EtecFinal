@@ -145,11 +145,15 @@ const ProductCarousel = ({ products, title, autoPlayDelay = 5000 }) => {
                 <div className="grid md:grid-cols-2 gap-8 items-center p-8 md:p-12">
                   {/* Product Image */}
                   <div className="relative h-96 flex items-center justify-center bg-black bg-opacity-25 rounded-2xl">
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="max-h-full w-auto object-contain hover:scale-110 transition-transform duration-500 rounded-2xl"
-                    />
+                    <Link
+                      to={`/product/${product.id}`}
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="max-h-full w-auto object-contain hover:scale-110 transition-transform duration-500 rounded-2xl"
+                      />
+                    </Link>
                   </div>
 
                   {/* Product Info */}
