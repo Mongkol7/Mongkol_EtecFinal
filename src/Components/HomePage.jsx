@@ -9,9 +9,9 @@ const ProductDetail02 = () => {
   const [isVisible, setIsVisible] = useState({});
 
   const productImages = [
-    '../../public/img/3iPhone17ProMax.jpg',
-  '../../public/img/3iPhone17ProMax02.jpg',
-  '../../public/img/iPhone17ProMaxCamera.jpg',
+    '/img/3iPhone17ProMax.jpg',
+    '/img/3iPhone17ProMax02.jpg',
+    '/img/iPhone17ProMaxCamera.jpg',
   ];
 
   const colors = [
@@ -26,21 +26,21 @@ const ProductDetail02 = () => {
       description:
         'Next-generation processor with 40% faster performance and enhanced efficiency.',
       image:
-        '../../public/img/Chip19.jpg',
+        '/img/Chip19.jpg',
     },
     {
       title: 'Professional Camera System',
       description:
         'Triple-lens system with AI-enhanced photography and 8K video recording.',
       image:
-        '../../public/img/Camera02.jpg'
+        '/img/Camera02.jpg'
     },
     {
       title: 'All-Day Battery',
       description:
         'Up to 30 hours of video playback with fast wireless charging.',
       image:
-        '../../public/img/Battery.png',
+        '/img/Battery.png',
     },
   ];
 

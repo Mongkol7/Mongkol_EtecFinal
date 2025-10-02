@@ -60,7 +60,7 @@ const Products = [
     description:
       'Active Noise Cancellation. Adaptive Audio. Personalized Spatial Audio. Up to 6 hours of listening time.',
     category: 'AirPods',
-    image: '/img/VisionPro.png',
+    image: '/img/Vision.png',
     rating: {
       rate: 4.8,
       count: 5632,
@@ -177,7 +177,7 @@ const Products = [
     description:
       'Computational audio. Active Noise Cancellation. Spatial Audio. Breathtaking sound quality.',
     category: 'AirPods',
-    image: '/img/AirPodsMax.png',
+    image: '/img/AirPodMax.png',
     rating: {
       rate: 4.7,
       count: 1234,
@@ -203,7 +203,7 @@ const Products = [
     description:
       'Pixel-perfect precision. Industry-leading low latency. Hover. Tilt and pressure sensitivity.',
     category: 'Accessories',
-    image: '/img/ApplePencilPro.png',
+    image: '/img/ApplePecilPro.png',
     rating: {
       rate: 4.8,
       count: 2341,
