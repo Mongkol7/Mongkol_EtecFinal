@@ -507,13 +507,13 @@ const Navbar = () => {
             <div className="flex items-center justify-between h-12">
               {/* Apple Logo */}
               <div className="flex items-center">
-                <Link to="/" className="p-2 -ml-2 rounded-lg transition-all duration-500 ease-out relative overflow-hidden group transform hover:scale-105">
+                <Link
+                  to="/"
+                  className="p-2 -ml-2 rounded-lg transition-all duration-500 ease-out relative overflow-hidden group transform hover:scale-105"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out rounded-lg transform scale-x-0 group-hover:scale-x-100"></div>
                   <div className="relative z-10 transition-all duration-300 ease-out group-hover:brightness-110">
-                    <img
-                      src="/img/AppleLogo.png"
-                      className="w-5 h-5"
-                    ></img>
+                    <img src="/img/AppleLogo.png" className="w-5 h-5"></img>
                   </div>
                 </Link>
               </div>
@@ -648,7 +648,6 @@ const Navbar = () => {
                             className="max-w-full max-h-full rounded-[10px] object-contain transition-all duration-300 ease-out group-hover:brightness-110 group-hover:contrast-110"
                           />
                         </div>
-                        
                       </div>
                       <div className="">
                         <h3 className="text-sm font-medium text-gray-900 group-hover:text-orange-500 transition-all duration-300 ease-out whitespace-nowrap group-hover:font-semibold">
@@ -699,20 +698,35 @@ const Navbar = () => {
                     transitionDelay: `${index * 100}ms`,
                   }}
                 >
-                  <button className="flex items-center space-x-2 text-left py-2 px-4 text-gray-800 font-medium text-lg w-full transition-all duration-300 ease-out hover:bg-gray-100/50 rounded-lg hover:scale-105 hover:pl-6">
-                    {item.icon && (
-                      <span className="transition-transform duration-300 ease-out group-hover:rotate-12">
-                        {item.icon}
-                      </span>
-                    )}
-                    <span>{item.name}</span>
-                  </button>
+                  {item.path ? (
+                    <Link
+                      to={item.path}
+                      className="flex items-center space-x-2 text-left py-2 px-4 text-gray-800 font-medium text-lg w-full transition-all duration-300 ease-out hover:bg-gray-100/50 rounded-lg hover:scale-105 hover:pl-6"
+                    >
+                      {item.icon && (
+                        <span className="transition-transform duration-300 ease-out group-hover:rotate-12">
+                          {item.icon}
+                        </span>
+                      )}
+                      <span>{item.name}</span>
+                    </Link>
+                  ) : (
+                    <button className="flex items-center space-x-2 text-left py-2 px-4 text-gray-800 font-medium text-lg w-full transition-all duration-300 ease-out hover:bg-gray-100/50 rounded-lg hover:scale-105 hover:pl-6">
+                      {item.icon && (
+                        <span className="transition-transform duration-300 ease-out group-hover:rotate-12">
+                          {item.icon}
+                        </span>
+                      )}
+                      <span>{item.name}</span>
+                    </button>
+                  )}
 
                   {/* Mobile Product Grid */}
                   <div className="grid grid-cols-2 gap-3 mt-3 ml-4">
                     {item.products?.slice(0, 4).map((product, productIndex) => (
-                      <div
+                      <Link
                         key={productIndex}
+                        to={product.path || '#'}
                         className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100/50 transition-all duration-300 ease-out hover:scale-105 hover:shadow-md"
                       >
                         <img
@@ -730,7 +744,7 @@ const Navbar = () => {
                             </p>
                           )}
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 </div>
